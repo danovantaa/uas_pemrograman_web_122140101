@@ -1,0 +1,76 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Alya Nurhaliza",
+      "email": "alya@example.com",
+      "password_hash": "$2a$10$hashedpassword",
+      "role": "client",
+      "created_at": "2025-05-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Dr. Indra Kusuma",
+      "email": "indra@example.com",
+      "password_hash": "$2a$10$hashedpassword",
+      "role": "psychologist",
+      "created_at": "2025-05-14T10:00:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Admin RuangPulih",
+      "email": "admin@ruangpulih.com",
+      "password_hash": "$2a$10$hashedpassword",
+      "role": "admin",
+      "created_at": "2025-05-01T09:00:00Z"
+    }
+  ],
+  "psychologists": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "specialization": "Kesehatan Mental Remaja",
+      "rating_avg": 4.8,
+      "certificate_file": "/certs/indra-cert.pdf",
+      "verified": true
+    }
+  ],
+  "sessions": [
+    {
+      "id": 1,
+      "client_id": 1,
+      "psychologist_id": 1,
+      "schedule_time": "2025-05-20T14:00:00Z",
+      "status": "confirmed",
+      "reminder_sent": true,
+      "notes": "Sesi pertama berjalan baik, fokus pada kecemasan."
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "session_id": 1,
+      "rating": 5,
+      "comment": "Psikolog sangat empatik dan profesional.",
+      "created_at": "2025-05-20T16:00:00Z"
+    }
+  ],
+  "availability": [
+    {
+      "id": 1,
+      "psychologist_id": 1,
+      "day_of_week": 1,
+      "start_time": "09:00",
+      "end_time": "12:00"
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "session_id": 1,
+      "amount": 150000,
+      "status": "paid",
+      "paid_at": "2025-05-20T13:30:00Z"
+    }
+  ]
+}
