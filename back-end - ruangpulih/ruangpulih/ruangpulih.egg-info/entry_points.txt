@@ -1,0 +1,5 @@
+[console_scripts]
+initialize_ruangpulih_db = ruangpulih.scripts.initialize_db:main
+
+[paste.app_factory]
+main = ruangpulih:main
