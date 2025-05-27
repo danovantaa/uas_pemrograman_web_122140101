@@ -1,4 +1,3 @@
-// File: components/app-logo-icon.jsx
 export default function AppLogoIcon(props) {
   return (
     <svg

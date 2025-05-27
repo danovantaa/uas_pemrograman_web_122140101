@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
-  CalendarCheck,
-  FileCheck,
+  Users,
+  FileText,
   Star,
   LogOut,
   Menu,
@@ -15,27 +15,23 @@ import { toast } from "sonner";
 
 import { useAuth } from "@/hooks/useAuth";
 
-// Menu items for psychologist dashboard
+// Menu items for client dashboard
 const navItems = [
-  { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-  { label: "Jadwal", path: "/dashboard/manage-schedules", icon: CalendarCheck },
-  {
-    label: "Booking Saya",
-    path: "/dashboard/manage-bookings",
-    icon: FileCheck,
-  },
-  { label: "Ulasan Saya", path: "/dashboard/manage-reviews", icon: Star },
+  { label: "Dashboard", path: "/client", icon: LayoutDashboard },
+  { label: "Cari Psikolog", path: "/client/psikolog", icon: Users },
+  { label: "Booking Saya", path: "/client/my-bookings", icon: FileText },
+  { label: "Ulasan Saya", path: "/client/my-reviews", icon: Star },
 ];
 
-export default function DashboardLayout({ children }) {
+export default function ClientDashboardLayout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { checkSession, logout, user, loading: authLoading } = useAuth();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Check session on component mount
   useEffect(() => {
+    // Wait until authLoading is complete
     if (!authLoading) {
       const { isValid } = checkSession();
       if (!isValid) {
@@ -44,14 +40,12 @@ export default function DashboardLayout({ children }) {
         });
         navigate("/login");
       }
-
-      // Optional: Restrict access based on user role if needed
-
-      if (user && user.role !== "psychologist") {
+      // Optional: Restrict access based on user role
+      if (user && user.role !== "client") {
         toast.warning(
           "Akses ditolak. Anda tidak memiliki izin untuk halaman ini."
         );
-        navigate("/login");
+        navigate("/"); // Redirect to landing page or another appropriate page
       }
     }
   }, [checkSession, navigate, user, authLoading]);
@@ -72,7 +66,6 @@ export default function DashboardLayout({ children }) {
     // Redirection to login page is handled by the useEffect above if session becomes invalid
   };
 
-  // Show loading state during authentication check
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted/40">
@@ -86,9 +79,7 @@ export default function DashboardLayout({ children }) {
       {/* Top Navbar */}
       <header className="bg-white shadow px-4 py-3 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <h1 className="text-lg font-bold text-primary">
-            RuangPulih Psikolog
-          </h1>
+          <h1 className="text-lg font-bold text-primary">RuangPulih Klien</h1>
           {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-4 items-center">
             {navItems.map(({ label, path, icon: Icon }) => (
@@ -164,9 +155,7 @@ export default function DashboardLayout({ children }) {
       </header>
 
       {/* Content Area */}
-      <main className="flex-grow p-0 md:p-6 max-w-7xl mx-auto w-full">
-        {children}
-      </main>
+      <main className="flex-grow p-6 max-w-7xl mx-auto w-full">{children}</main>
     </div>
   );
 }

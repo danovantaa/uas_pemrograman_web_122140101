@@ -25,7 +25,7 @@ export default function HowItWorksSection() {
   ];
 
   return (
-    <section className="w-full bg-primary/5 py-20 px-6">
+    <section className="w-full bg-black py-20 px-6">
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
           Cara Kerja RuangPulih
@@ -39,7 +39,7 @@ export default function HowItWorksSection() {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-primary/70 transition hover:shadow-md"
+              className="bg-stone-900 rounded-lg p-6 shadow-sm border-l-4 border-primary/70 transition hover:shadow-md"
             >
               <div className="flex items-start gap-4 mb-3">
                 <CheckCircle className="text-primary w-6 h-6 mt-1" />

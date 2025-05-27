@@ -34,7 +34,7 @@ export default function FeatureSection() {
   ];
 
   return (
-    <section className="w-full bg-white py-16 px-6">
+    <section className="w-full bg-black py-16 px-6">
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
           Kenapa Memilih RuangPulih?

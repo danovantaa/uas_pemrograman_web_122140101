@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
+import { buttonVariants } from "../ui/button";
 
 export default function HeroSection() {
   return (
-    <section className="w-full bg-gradient-to-br from-primary to-white py-16 px-6 min-h-screen flex items-center">
+    <section className="w-full py-16 px-6 min-h-screen flex items-center">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         {/* Kiri: Teks Hero */}
         <div className="text-primary-foreground">
@@ -13,10 +14,7 @@ export default function HeroSection() {
             Konsultasi dengan psikolog profesional secara online. Aman, nyaman,
             dan mudah diakses dari mana saja.
           </p>
-          <Link
-            to="/psikolog"
-            className="inline-block px-6 py-3 bg-primary text-white font-semibold rounded-md shadow hover:bg-primary/90 transition"
-          >
+          <Link to="/psikolog" className={buttonVariants()}>
             Cari Psikolog
           </Link>
         </div>
@@ -24,7 +22,7 @@ export default function HeroSection() {
         {/* Kanan: Ilustrasi */}
         <div className="flex justify-center">
           <img
-            src="/hero-image.png"
+            src="/ruang-pulih.png"
             alt="Ilustrasi konsultasi psikolog"
             className="max-w-full w-[90%] md:w-[80%] h-auto"
             loading="lazy"

@@ -1,71 +1,87 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import TextLink from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AuthLayout from "@/layouts/auth-layout";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Register() {
+  const { register, error, loading } = useAuth();
+  const navigate = useNavigate();
+
   const [data, setData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     password_confirmation: "",
   });
 
-  const [processing, setProcessing] = useState(false);
-
-  const errors = {
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-  };
+  const [formError, setFormError] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setProcessing(true);
+    setFormError({});
 
-    setTimeout(() => {
-      console.log("Form submitted:", data);
-      setProcessing(false);
-    }, 1000);
+    if (data.password !== data.password_confirmation) {
+      setFormError({ password_confirmation: "Password tidak cocok." });
+      toast.error("Konfirmasi password tidak sesuai");
+      return;
+    }
+
+    const success = await register(data.username, data.email, data.password);
+
+    if (success) {
+      toast.success("Pendaftaran berhasil! Silakan login.");
+      navigate("/login");
+    } else if (error) {
+      toast.error(error);
+    } else {
+      toast.error("Terjadi kesalahan saat mendaftar.");
+    }
   };
 
   return (
     <AuthLayout title="Daftar ke RuangPulih">
-      <div className="flex flex-col-reverse gap-8 w-full items-center">
+      <div className="flex flex-col md:flex-row gap-8 w-full items-stretch min-h-[450px]">
+        {/* Ilustrasi */}
+        <div className="w-full md:w-1/2 flex justify-center">
+          <img
+            src="/hero-image.png"
+            alt="Ilustrasi Pendaftaran"
+            className="max-w-sm w-full h-full object-cover rounded-lg"
+          />
+        </div>
+
         {/* Form Register */}
         <form
           onSubmit={handleSubmit}
-          className="w-full space-y-6 bg-white p-6 rounded-lg shadow"
+          className="w-full md:w-1/2 space-y-6 flex flex-col justify-center bg-white p-6 rounded-lg shadow"
         >
           <div className="space-y-4">
             <div>
-              <Label htmlFor="name" className="block mb-1">
+              <Label htmlFor="username" className="block mb-1">
                 Nama Lengkap
               </Label>
               <Input
-                id="name"
-                name="name"
+                id="username"
+                name="username"
                 type="text"
                 required
                 autoComplete="name"
-                value={data.name}
+                value={data.username}
                 onChange={handleChange}
-                disabled={processing}
+                disabled={loading}
                 placeholder="Nama lengkap"
               />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name}</p>
-              )}
             </div>
 
             <div>
@@ -80,12 +96,9 @@ export default function Register() {
                 autoComplete="email"
                 value={data.email}
                 onChange={handleChange}
-                disabled={processing}
+                disabled={loading}
                 placeholder="you@example.com"
               />
-              {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
-              )}
             </div>
 
             <div>
@@ -100,12 +113,9 @@ export default function Register() {
                 autoComplete="new-password"
                 value={data.password}
                 onChange={handleChange}
-                disabled={processing}
+                disabled={loading}
                 placeholder="••••••••"
               />
-              {errors.password && (
-                <p className="text-sm text-red-500">{errors.password}</p>
-              )}
             </div>
 
             <div>
@@ -120,19 +130,19 @@ export default function Register() {
                 autoComplete="new-password"
                 value={data.password_confirmation}
                 onChange={handleChange}
-                disabled={processing}
+                disabled={loading}
                 placeholder="Ulangi password"
               />
-              {errors.password_confirmation && (
+              {formError.password_confirmation && (
                 <p className="text-sm text-red-500">
-                  {errors.password_confirmation}
+                  {formError.password_confirmation}
                 </p>
               )}
             </div>
           </div>
 
-          <Button type="submit" className="w-full" disabled={processing}>
-            {processing && <span className="animate-spin mr-2">🔄</span>}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading && <span className="animate-spin mr-2">🔄</span>}
             Daftar Sekarang
           </Button>
 
@@ -143,15 +153,6 @@ export default function Register() {
             </Link>
           </div>
         </form>
-
-        {/* Ilustrasi */}
-        <div className="w-full flex justify-center">
-          <img
-            src="/hero-image.png"
-            alt="Ilustrasi Pendaftaran"
-            className="max-w-sm w-full"
-          />
-        </div>
       </div>
     </AuthLayout>
   );

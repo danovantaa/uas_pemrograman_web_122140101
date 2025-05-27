@@ -21,7 +21,7 @@ export default function TestimonialSection() {
   ];
 
   return (
-    <section className="w-full bg-white py-20 px-6">
+    <section className="w-full bg-black py-20 px-6">
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
           Apa Kata Mereka?
@@ -35,7 +35,7 @@ export default function TestimonialSection() {
           {testimonials.map((item, index) => (
             <div
               key={index}
-              className="bg-primary/5 rounded-lg p-6 text-left shadow hover:shadow-md transition"
+              className="bg-stone-900 rounded-lg p-6 text-left shadow hover:shadow-md transition"
             >
               <p className="italic text-muted-foreground mb-4">
                 “{item.quote}”
