@@ -284,7 +284,7 @@ export default function ClientMyBookingsPage() {
             ) : (
               <p className="text-sm text-muted-foreground">
                 Anda belum memiliki booking.{" "}
-                <Link to="/psikolog" className="text-primary underline">
+                <Link to="/client/psikolog" className="text-primary underline">
                   Cari psikolog untuk booking pertama Anda!
                 </Link>
               </p>
