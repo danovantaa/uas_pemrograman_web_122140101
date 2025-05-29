@@ -117,7 +117,7 @@ export default function ClientMyReviewsPage() {
         <h2 className="text-xl font-semibold">Akses Ditolak</h2>
         <p>Hanya klien yang dapat melihat ulasan mereka.</p>
         <Button asChild className="mt-4">
-          <Link to="/dashboard">Kembali ke Dashboard</Link>
+          <Link to="/client">Kembali ke Dashboard</Link>
         </Button>
       </div>
     );
