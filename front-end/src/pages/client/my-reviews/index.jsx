@@ -17,12 +17,13 @@ import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-import DashboardLayout from "@/layouts/dashboard-layout";
+// import DashboardLayout from "@/layouts/dashboard-layout"; // Not used here, ClientDashboardLayout is used
 import { useAuth } from "@/hooks/useAuth";
 import { useReviews } from "@/hooks/useReviews";
 import { useBookings } from "@/hooks/useBookings"; // Diperlukan untuk filtering review & mendapatkan info booking terkait
 import { useSchedules } from "@/hooks/useSchedules"; // Diperlukan untuk mendapatkan info jadwal terkait booking
 import ClientDashboardLayout from "@/layouts/client-dashboard-layout";
+import { ReviewFormDialog } from "@/components/ReviewFormDialog"; // Import komponen ReviewFormDialog
 
 export default function ClientMyReviewsPage() {
   const { user } = useAuth();
@@ -30,11 +31,11 @@ export default function ClientMyReviewsPage() {
     reviews,
     loading: reviewsLoading,
     error: reviewsError,
-    fetchAllReviews, // Mengambil semua ulasan [cite: 11]
+    fetchAllReviews, // Mengambil semua ulasan
   } = useReviews();
 
-  const { bookings, fetchUserBookings } = useBookings(); // Mengambil booking klien [cite: 8]
-  const { schedules, fetchSchedules } = useSchedules(); // Mengambil semua jadwal [cite: 7]
+  const { bookings, fetchUserBookings } = useBookings(); // Mengambil booking klien
+  const { schedules, fetchSchedules } = useSchedules(); // Mengambil semua jadwal
 
   const [clientReviews, setClientReviews] = useState([]);
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
@@ -42,11 +43,34 @@ export default function ClientMyReviewsPage() {
   const [clientBookingsMap, setClientBookingsMap] = useState({}); // Map booking_id ke detail booking
   const [clientSchedulesMap, setClientSchedulesMap] = useState({}); // Map schedule_id ke detail schedule
 
+  // State baru untuk mengontrol dialog form ulasan
+  const [isReviewFormDialogOpen, setIsReviewFormDialogOpen] = useState(false);
+
+  // Handler untuk membuka dialog form ulasan baru
+  const handleOpenNewReviewDialog = () => {
+    setIsReviewFormDialogOpen(true);
+    // CATATAN: Untuk saat ini, bookingId akan null saat dibuka dari sini.
+    // Ini mungkin menyebabkan pesan error di ReviewFormDialog
+    // karena dia mengharapkan bookingId yang valid.
+    // Solusi ideal adalah klien memilih booking yang sudah selesai dan
+    // belum diulas terlebih dahulu.
+  };
+
+  // Callback setelah ulasan berhasil dikirim
+  const handleReviewSuccess = () => {
+    toast.success("Ulasan berhasil dikirim!", {
+      description: "Terima kasih atas ulasan Anda.",
+    });
+    setIsReviewFormDialogOpen(false); // Tutup dialog
+    fetchAllReviews(); // Perbarui daftar ulasan
+    fetchUserBookings(); // Perbarui status booking jika perlu (misal: tombol 'Ulas' disembunyikan)
+  };
+
   useEffect(() => {
     if (user && user.role === "client") {
-      fetchAllReviews(); // Fetch semua ulasan [cite: 11]
-      fetchUserBookings(); // Fetch semua booking user ini [cite: 8]
-      fetchSchedules(); // Fetch semua jadwal [cite: 7]
+      fetchAllReviews(); // Fetch semua ulasan
+      fetchUserBookings(); // Fetch semua booking user ini
+      fetchSchedules(); // Fetch semua jadwal
     }
   }, [user, fetchAllReviews, fetchUserBookings, fetchSchedules]);
 
@@ -77,7 +101,7 @@ export default function ClientMyReviewsPage() {
     if (reviews && user) {
       const filteredReviews = reviews
         .filter((review) => {
-          // Asumsi `booking.client_id` tersedia di detail booking yang terkait dengan review
+          // Asumsi booking.client_id tersedia di detail booking yang terkait dengan review
           const relatedBooking = clientBookingsMap[review.booking_id];
           return relatedBooking && relatedBooking.client_id === user.id;
         })
@@ -128,11 +152,10 @@ export default function ClientMyReviewsPage() {
       <div className="p-6 space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Ulasan Saya</h1>
-          <Button asChild>
-            <Link to="/client/my-reviews/create">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Tulis Ulasan Baru
-            </Link>
+          {/* Bagian ini telah diubah untuk memicu dialog */}
+          <Button onClick={handleOpenNewReviewDialog}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Tulis Ulasan Baru
           </Button>
         </div>
 
@@ -288,7 +311,7 @@ export default function ClientMyReviewsPage() {
                               ].schedule_id
                             ].date
                           ),
-                          "dd MMMM yyyy"
+                          "dd MMMM"
                         )}
                       </p>
                       <p>
@@ -314,7 +337,20 @@ export default function ClientMyReviewsPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Review Form Dialog untuk "Tulis Ulasan Baru" */}
+        <ReviewFormDialog
+          open={isReviewFormDialogOpen}
+          onOpenChange={setIsReviewFormDialogOpen}
+          // bookingId diatur ke null untuk saat ini karena belum ada booking spesifik yang dipilih dari sini.
+          // Ini akan memicu pesan validasi "Booking ID tidak ditemukan" di dalam ReviewFormDialog.
+          bookingId={null}
+          onReviewSuccess={handleReviewSuccess}
+        />
       </div>
     </ClientDashboardLayout>
   );
 }
+
+
+ini di my-reviews/index bgian client
