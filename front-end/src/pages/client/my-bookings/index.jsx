@@ -156,7 +156,7 @@ export default function ClientMyBookingsPage() {
           <h2 className="text-xl font-semibold">Akses Ditolak</h2>
           <p>Hanya klien yang dapat melihat riwayat booking.</p>
           <Button asChild className="mt-4">
-            <Link to="/dashboard">Kembali ke Dashboard</Link>
+            <Link to="/client">Kembali ke Dashboard</Link>
           </Button>
         </div>
       </ClientDashboardLayout>
@@ -284,7 +284,7 @@ export default function ClientMyBookingsPage() {
             ) : (
               <p className="text-sm text-muted-foreground">
                 Anda belum memiliki booking.{" "}
-                <Link to="/client/psikolog" className="text-primary underline">
+                <Link to="/psikolog" className="text-primary underline">
                   Cari psikolog untuk booking pertama Anda!
                 </Link>
               </p>
